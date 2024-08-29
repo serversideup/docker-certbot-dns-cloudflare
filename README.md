@@ -32,7 +32,7 @@ The following environment variables can be used to customize the Certbot contain
 | `CERTBOT_EMAIL` | Email address for Let's Encrypt notifications | - |
 | `CERTBOT_KEY_TYPE` | Type of private key to generate | `ecdsa` |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication | - |
-| `RENEWAL_INTERVAL` | Interval between certificate renewal checks | 12h |
+| `RENEWAL_INTERVAL` | Interval between certificate renewal checks | 43200 seconds (12 hours) |
 
 ## Usage
 
