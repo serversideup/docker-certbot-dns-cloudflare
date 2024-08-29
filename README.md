@@ -57,6 +57,24 @@ The following environment variables can be used to customize the Certbot contain
 
 3. The container will automatically generate and renew the certificate.
 
+### Works great for orchestrated deployments
+We designed this image to work great in orchestrated deployments like Kubernetes, Docker Swarm, or even in Github Actions. Look how simple the syntax is:
+
+```yaml
+  certbot:
+    image: serversideup/certbot-dns-cloudflare
+    volumes:
+      - certbot_data:/etc/letsencrypt
+    environment:
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
+      CERTBOT_EMAIL: "${CERTBOT_EMAIL}"
+      CERTBOT_DOMAIN: "${CERTBOT_DOMAIN}"
+      CERTBOT_KEY_TYPE: "rsa"
+  
+  volumes:
+    certbot_data:
+```
+
 ## Resources
 - **[Discord](https://serversideup.net/discord)** for friendly support from the community and the team.
 - **[GitHub](https://github.com/serversideup/docker-certbot-dns-cloudflare)** for source code, bug reports, and project management.
