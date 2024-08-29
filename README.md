@@ -12,6 +12,10 @@
 # Certbot Cloudflare DNS Docker Container
 This container is used to generate and automatically renew SSL certificates from Let's Encrypt using the Cloudflare DNS plugin. It's based off the [official Certbot image](https://hub.docker.com/r/certbot/dns-cloudflare) with some modifications to make it more flexible and configurable.
 
+| Docker Image | Size |
+|--------------|------|
+| [**serversideup/certbot-dns-cloudflare**](https://hub.docker.com/r/serversideup/certbot-dns-cloudflare) | [![Docker Image Size](https://img.shields.io/docker/image-size/serversideup/certbot-dns-cloudflare/latest?style=flat-square)](https://hub.docker.com/r/serversideup/certbot-dns-cloudflare) |
+
 ## Base Image
 The image is based on `certbot/dns-cloudflare:latest`, providing a stable and up-to-date environment for running Certbot with Cloudflare DNS authentication.
 
