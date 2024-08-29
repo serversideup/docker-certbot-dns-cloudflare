@@ -52,7 +52,8 @@ run_certbot
 
 # Infinite loop to keep the container running and periodically check for renewals
 while true; do
-    echo "Next certificate renewal check will be in ${RENEWAL_INTERVAL} seconds"
+    next_run=$(date -d "@$(($(date +%s) + RENEWAL_INTERVAL))" '+%Y-%m-%d %H:%M:%S')
+    echo "Next certificate renewal check will be at ${next_run}"
     sleep "$RENEWAL_INTERVAL"
     if ! run_certbot; then
         echo "Error: Certificate renewal failed. Exiting."
