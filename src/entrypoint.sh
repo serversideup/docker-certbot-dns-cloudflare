@@ -1,7 +1,5 @@
 #!/bin/sh
 
-
-# Display a fun and helpful startup message
 cat << "EOF"
  ____________________
 < Certbot, activate! >
