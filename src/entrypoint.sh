@@ -1,4 +1,26 @@
 #!/bin/sh
+
+
+# Display a fun and helpful startup message
+cat << "EOF"
+ ____________________
+< Certbot, activate! >
+ --------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+EOF
+
+echo "🚀 Let's Get Encrypted! 🚀"
+echo "🌐 Domain: $CERTBOT_DOMAIN"
+echo "📧 Email: $CERTBOT_EMAIL"
+echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
+echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
+echo "Let's Encrypt, shall we?"
+echo "-----------------------------------------------------------"
+
 # Validate required environment variables
 for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAIN CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
     if [ -z "$(eval echo \$$var)" ]; then
