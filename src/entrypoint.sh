@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Listen for "docker stop": https://superuser.com/a/1299463/57662
+# shellcheck disable=SC3048
+trap "echo Shutdown requested; exit 0" SIGTERM
+
 cat << "EOF"
  ____________________
 < Certbot, activate! >
@@ -54,7 +58,11 @@ run_certbot
 while true; do
     next_run=$(date -d "@$(($(date +%s) + RENEWAL_INTERVAL))" '+%Y-%m-%d %H:%M:%S')
     echo "Next certificate renewal check will be at ${next_run}"
-    sleep "$RENEWAL_INTERVAL"
+
+    # Listen for "docker stop": https://superuser.com/a/1299463/57662
+    sleep "$RENEWAL_INTERVAL" &
+    wait
+
     if ! run_certbot; then
         echo "Error: Certificate renewal failed. Exiting."
         exit 1
