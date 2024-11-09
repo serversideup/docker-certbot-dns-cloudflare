@@ -6,6 +6,6 @@ ENV CERTBOT_DOMAIN="" \
     CLOUDFLARE_API_TOKEN="" \
     RENEWAL_INTERVAL=43200
 
-COPY --chmod=755 entrypoint.sh /entrypoint.sh
+COPY --chmod=700 entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
