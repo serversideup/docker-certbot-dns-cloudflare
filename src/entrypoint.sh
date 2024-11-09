@@ -39,7 +39,8 @@ run_certbot() {
         --key-type "$CERTBOT_KEY_TYPE" \
         --email "$CERTBOT_EMAIL" \
         --agree-tos \
-        --non-interactive
+        --non-interactive \
+        --strict-permissions
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo "Error: certbot command failed with exit code $exit_code"
