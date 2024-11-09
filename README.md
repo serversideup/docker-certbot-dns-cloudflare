@@ -28,6 +28,7 @@ The image is based on `certbot/dns-cloudflare:latest`, providing a stable and up
 - Cloudflare DNS authentication for domain validation
 - Customizable configuration via environment variables
 - Periodic certificate renewal checks
+- Windows support (set `REPLACE_SYMLINKS` to `true`)
 
 ## Environment Variables
 
