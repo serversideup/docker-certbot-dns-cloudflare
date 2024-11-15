@@ -51,7 +51,8 @@ run_certbot() {
     fi
 }
 
-# Replaces all symlinks with direct copies of the files they reference, maintaining the original locations.
+# Workaround https://github.com/microsoft/wsl/issues/12250 by replacing symlinks with direct copies of the files they
+# reference.
 replace_symlinks() {
     # shellcheck disable=SC3043
     local dir="$1"
