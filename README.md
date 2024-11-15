@@ -1,7 +1,7 @@
-<p align="center">
+<p style="text-align: center">
 		<img src="https://raw.githubusercontent.com/serversideup/docker-certbot-dns-cloudflare/main/.github/header.png" width="1200" alt="Docker Images Logo">
 </p>
-<p align="center">
+<p style="text-align: center">
 	<a href="https://actions-badge.atrox.dev/serversideup/docker-certbot-dns-cloudflare/goto?ref=main"><img alt="Build Status" src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fserversideup%2Fdocker-proftpd%2Fbadge%3Fref%3Dmain&style=flat" /></a>
 	<a href="https://github.com/serversideup/docker-certbot-dns-cloudflare/blob/main/LICENSE" target="_blank"><img src="https://badgen.net/github/license/serversideup/docker-certbot-dns-cloudflare" alt="License"></a>
 	<a href="https://github.com/sponsors/serversideup"><img src="https://badgen.net/badge/icon/Support%20Us?label=GitHub%20Sponsors&color=orange" alt="Support us"></a>
@@ -30,13 +30,13 @@ The image is based on `certbot/dns-cloudflare:latest`, providing a stable and up
 
 The following environment variables can be used to customize the Certbot container:
 
-| Variable | Description | Default Value |
-|----------|-------------|---------------|
-| `CERTBOT_DOMAIN` | Domain for which to obtain the certificate | - |
-| `CERTBOT_EMAIL` | Email address for Let's Encrypt notifications | - |
-| `CERTBOT_KEY_TYPE` | Type of private key to generate | `ecdsa` |
-| `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication | - |
-| `RENEWAL_INTERVAL` | Interval between certificate renewal checks | 43200 seconds (12 hours) |
+| Variable               | Description                                                         | Default Value |
+|------------------------|---------------------------------------------------------------------|---------------|
+| `CERTBOT_DOMAINS`      | Comma-separated list of domains for which to obtain the certificate | - |
+| `CERTBOT_EMAIL`        | Email address for Let's Encrypt notifications                       | - |
+| `CERTBOT_KEY_TYPE`     | Type of private key to generate                                     | `ecdsa` |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication                         | - |
+| `RENEWAL_INTERVAL`     | Interval between certificate renewal checks                         | 43200 seconds (12 hours) |
 
 ## Usage
 
@@ -52,7 +52,7 @@ The following environment variables can be used to customize the Certbot contain
 
    ```sh
    docker run \
-    -e CERTBOT_DOMAIN="yourdomain.com" \
+    -e CERTBOT_DOMAINS="yourdomain.com" \
     -e CERTBOT_EMAIL="your-email@example.com" \
     -e CLOUDFLARE_API_TOKEN="your-cloudflare-api-token" \
     -v /path/to/your/certs:/etc/letsencrypt \
@@ -72,7 +72,7 @@ We designed this image to work great in orchestrated deployments like Kubernetes
     environment:
       CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
       CERTBOT_EMAIL: "${CERTBOT_EMAIL}"
-      CERTBOT_DOMAIN: "${CERTBOT_DOMAIN}"
+      CERTBOT_DOMAINS: "${CERTBOT_DOMAINS}"
       CERTBOT_KEY_TYPE: "rsa"
   
   volumes:
@@ -97,7 +97,7 @@ Need help getting started? Join our Discord community and we'll help you out!
 ## Our Sponsors
 All of our software is free an open to the world. None of this can be brought to you without the financial backing of our sponsors.
 
-<p align="center"><a href="https://github.com/sponsors/serversideup"><img src="https://521public.s3.amazonaws.com/serversideup/sponsors/sponsor-box.png" alt="Sponsors"></a></p>
+<p style="text-align: center"><a href="https://github.com/sponsors/serversideup"><img src="https://521public.s3.amazonaws.com/serversideup/sponsors/sponsor-box.png" alt="Sponsors"></a></p>
 
 #### Bronze Sponsors
 <!-- bronze -->No bronze sponsors yet. <a href="https://github.com/sponsors/serversideup">Become a sponsor →</a><!-- bronze -->
@@ -108,7 +108,7 @@ All of our software is free an open to the world. None of this can be brought to
 ## About Us
 We're [Dan](https://twitter.com/danpastori) and [Jay](https://twitter.com/jaydrogers) - a two person team with a passion for open source products. We created [Server Side Up](https://serversideup.net) to help share what we learn.
 
-<div align="center">
+<div style="text-align: center">
 
 | <div align="center">Dan Pastori</div>                  | <div align="center">Jay Rogers</div>                                 |
 | ----------------------------- | ------------------------------------------ |
