@@ -14,7 +14,7 @@ jobs:
   build:
     uses: ./.github/workflows/service_docker-build-and-publish.yml
     with:
-      tags: "serversideup/certbot-dns-cloudflare:latest"
+      tags: "serversideup/certbot-dns-cloudflare:edge"
     secrets: inherit
 
   update_container_readme:
