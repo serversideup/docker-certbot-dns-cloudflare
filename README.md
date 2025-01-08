@@ -13,9 +13,9 @@
 
 This container is used to generate and automatically renew SSL certificates from Let's Encrypt using the Cloudflare DNS plugin. It's based off the [official Certbot image](https://hub.docker.com/r/certbot/dns-cloudflare) with some modifications to make it more flexible and configurable.
 
-| Docker Image                                                                                            | Size                                                                                                                                                                                        |
-|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**serversideup/certbot-dns-cloudflare**](https://hub.docker.com/r/serversideup/certbot-dns-cloudflare) | [![Docker Image Size](https://img.shields.io/docker/image-size/serversideup/certbot-dns-cloudflare/latest?style=flat-square)](https://hub.docker.com/r/serversideup/certbot-dns-cloudflare) |
+| Docker Image | Size |
+|-------------|------|
+| [serversideup/certbot-dns-cloudflare](https://hub.docker.com/r/serversideup/certbot-dns-cloudflare) | ![Docker Image Size](https://img.shields.io/docker/image-size/serversideup/certbot-dns-cloudflare/latest?style=flat-square) |
 
 ## Base Image
 
@@ -41,7 +41,7 @@ The following environment variables can be used to customize the Certbot contain
 | `CERTBOT_KEY_TYPE`     | Type of private key to generate                                     | `ecdsa` |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication                         | - |
 | `RENEWAL_INTERVAL`     | Interval between certificate renewal checks                         | 43200 seconds (12 hours) |
-| `REPLACE_SYMLINKS`     | Replaces symlinks with direct copies of the files they reference | `false`                    |
+| `REPLACE_SYMLINKS`     | Replaces symlinks with direct copies of the files they reference (required for Windows) | `false`                    |
 
 ## Usage
 
@@ -122,9 +122,30 @@ We're [Dan](https://twitter.com/danpastori) and [Jay](https://twitter.com/jaydro
 
 <div style="text-align: center">
 
-| <div align="center">Dan Pastori</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | <div align="center">Jay Rogers</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <div align="center"><a href="https://twitter.com/danpastori"><img src="https://serversideup.net/wp-content/uploads/2023/08/dan.jpg" title="Dan Pastori" width="150px"></a><br /><a href="https://twitter.com/danpastori"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px"></a><a href="https://github.com/danpastori"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px"></a></div> | <div align="center"><a href="https://twitter.com/jaydrogers"><img src="https://serversideup.net/wp-content/uploads/2023/08/jay.jpg" title="Jay Rogers" width="150px"></a><br /><a href="https://twitter.com/jaydrogers"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px"></a><a href="https://github.com/jaydrogers"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px"></a></div> |
+| <div align="center">Dan Pastori</div> | <div align="center">Jay Rogers</div> |
+|---------------------------------------|-------------------------------------|
+| <div align="center">
+    <a href="https://twitter.com/danpastori">
+        <img src="https://serversideup.net/wp-content/uploads/2023/08/dan.jpg" title="Dan Pastori" width="150px">
+    </a><br />
+    <a href="https://twitter.com/danpastori">
+        <img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px">
+    </a>
+    <a href="https://github.com/danpastori">
+        <img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px">
+    </a>
+</div> | 
+<div align="center">
+    <a href="https://twitter.com/jaydrogers">
+        <img src="https://serversideup.net/wp-content/uploads/2023/08/jay.jpg" title="Jay Rogers" width="150px">
+    </a><br />
+    <a href="https://twitter.com/jaydrogers">
+        <img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px">
+    </a>
+    <a href="https://github.com/jaydrogers">
+        <img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px">
+    </a>
+</div> |
 
 </div>
 
