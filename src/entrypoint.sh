@@ -109,6 +109,7 @@ echo "-----------------------------------------------------------"
 
 # Create Cloudflare configuration file
 echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > /cloudflare.ini
+chmod 600 /cloudflare.ini
 
 # Run certbot initially to get the certificates
 run_certbot
