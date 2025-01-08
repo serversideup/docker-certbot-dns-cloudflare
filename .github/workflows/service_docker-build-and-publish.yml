@@ -6,7 +6,19 @@ on:
         type: string
 
 jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Analyze workflow files
+        uses: docker://rhysd/actionlint:1.7.6
+        with:
+          args: "-color -verbose -shellcheck="
+
   docker-publish:
+    needs: lint
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
