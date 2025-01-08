@@ -52,7 +52,7 @@ The following environment variables can be used to customize the Certbot contain
 
 2. Run the container with the required environment variables:
 
-> [!CAUTION ]
+> [!CAUTION]
 > Make sure to replace the `-v /path/to/your/certs:/etc/letsencrypt` with a valid path on your host machine.
 
    ```sh
