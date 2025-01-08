@@ -1,65 +1,20 @@
 #!/bin/sh
 
-# Validate required environment variables
-for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
-    if [ -z "$(eval echo \$$var)" ]; then
-        echo "Error: $var environment variable is not set"
-        exit 1
-    fi
-done
+################################################################################
+# Functions
+################################################################################
 
-# Permissions must be created after volumes have been mounted; otherwise, windows file system permissions will override
-# the permissions set within the container.
-mkdir -p /etc/letsencrypt/accounts /var/log/letsencrypt /var/lib/letsencrypt
-chmod 755 /etc/letsencrypt /var/lib/letsencrypt
-chmod 700 /etc/letsencrypt/accounts /var/log/letsencrypt
+cleanup() {
+    echo "Shutdown requested, exiting gracefully..."
+    exit 0
+}
 
-cat << "EOF"
- ____________________
-< Certbot, activate! >
- --------------------
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
-EOF
-
-if [ -n "$CERTBOT_DOMAIN" ] && [ -z "$CERTBOT_DOMAINS" ]; then
-  CERTBOT_DOMAINS=$CERTBOT_DOMAIN
-fi
-
-echo "🚀 Let's Get Encrypted! 🚀"
-echo "🌐 Domain(s): $CERTBOT_DOMAINS"
-echo "📧 Email: $CERTBOT_EMAIL"
-echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
-echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
-echo "Let's Encrypt, shall we?"
-echo "-----------------------------------------------------------"
-
-# Create Cloudflare configuration file
-echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > /cloudflare.ini
-
-# Function to run certbot with provided arguments
-run_certbot() {
-    certbot certonly \
-        --dns-cloudflare \
-        --dns-cloudflare-credentials /cloudflare.ini \
-        -d "$CERTBOT_DOMAINS" \
-        --key-type "$CERTBOT_KEY_TYPE" \
-        --email "$CERTBOT_EMAIL" \
-        --agree-tos \
-        --non-interactive \
-        --strict-permissions
-    exit_code=$?
-    if [ $exit_code -ne 0 ]; then
-        echo "Error: certbot command failed with exit code $exit_code"
-        exit 1
-    fi
-
-    if [ "$REPLACE_SYMLINKS" = "true" ]; then
-      replace_symlinks "/etc/letsencrypt/live";
-    fi
+configure_windows_file_permissions() {
+    # Permissions must be created after volumes have been mounted; otherwise, windows file system permissions will override
+    # the permissions set within the container.
+    mkdir -p /etc/letsencrypt/accounts /var/log/letsencrypt /var/lib/letsencrypt
+    chmod 755 /etc/letsencrypt /var/lib/letsencrypt
+    chmod 700 /etc/letsencrypt/accounts /var/log/letsencrypt
 }
 
 # Workaround https://github.com/microsoft/wsl/issues/12250 by replacing symlinks with direct copies of the files they
@@ -86,14 +41,77 @@ replace_symlinks() {
     done
 }
 
-cleanup() {
-    echo "Shutdown requested, exiting gracefully..."
-    exit 0
+run_certbot() {
+    certbot certonly \
+        --dns-cloudflare \
+        --dns-cloudflare-credentials /cloudflare.ini \
+        -d "$CERTBOT_DOMAINS" \
+        --key-type "$CERTBOT_KEY_TYPE" \
+        --email "$CERTBOT_EMAIL" \
+        --agree-tos \
+        --non-interactive \
+        --strict-permissions
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo "Error: certbot command failed with exit code $exit_code"
+        exit 1
+    fi
+
+    if [ "$REPLACE_SYMLINKS" = "true" ]; then
+      replace_symlinks "/etc/letsencrypt/live";
+    fi
 }
 
-trap cleanup SIGTERM SIGINT
+validate_environment_variables() {
+    # Validate required environment variables
+    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
+        if [ -z "$(eval echo \$$var)" ]; then
+            echo "Error: $var environment variable is not set"
+            exit 1
+        fi
+    done
+}
 
-# Run certbot initially
+################################################################################
+# Main
+################################################################################
+
+trap cleanup TERM INT
+
+validate_environment_variables
+
+if [ "$REPLACE_SYMLINKS" = "true" ]; then
+    configure_windows_file_permissions
+fi
+
+# Ensure backwards compatibility with the old CERTBOT_DOMAIN environment variable
+if [ -n "$CERTBOT_DOMAIN" ] && [ -z "$CERTBOT_DOMAINS" ]; then
+  CERTBOT_DOMAINS=$CERTBOT_DOMAIN
+fi
+
+cat << "EOF"
+ ____________________
+< Certbot, activate! >
+ --------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+EOF
+
+echo "🚀 Let's Get Encrypted! 🚀"
+echo "🌐 Domain(s): $CERTBOT_DOMAINS"
+echo "📧 Email: $CERTBOT_EMAIL"
+echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
+echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
+echo "Let's Encrypt, shall we?"
+echo "-----------------------------------------------------------"
+
+# Create Cloudflare configuration file
+echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > /cloudflare.ini
+
+# Run certbot initially to get the certificates
 run_certbot
 
 # Infinite loop to keep the container running and periodically check for renewals
@@ -102,7 +120,7 @@ while true; do
     echo "Next certificate renewal check will be at ${next_run}"
 
     # Use wait with timeout to allow for signal interruption
-    sleep $RENEWAL_INTERVAL & 
+    sleep "$RENEWAL_INTERVAL" & 
     wait $!
 
     # Check if we received a signal
