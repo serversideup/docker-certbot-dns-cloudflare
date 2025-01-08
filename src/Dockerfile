@@ -1,6 +1,8 @@
+# syntax=docker/dockerfile:1
+# check=skip=SecretsUsedInArgOrEnv
 FROM certbot/dns-cloudflare:latest
 
-ENV CERTBOT_DOMAIN="" \
+ENV CERTBOT_DOMAINS="" \
     CERTBOT_EMAIL="" \
     CERTBOT_KEY_TYPE="ecdsa" \
     CLOUDFLARE_API_TOKEN="" \
