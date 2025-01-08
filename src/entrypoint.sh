@@ -119,7 +119,7 @@ while true; do
     # POSIX-compliant way to show next run time
     current_timestamp=$(date +%s)
     next_timestamp=$((current_timestamp + RENEWAL_INTERVAL))
-    next_run=$(date -r "$next_timestamp" '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date '+%Y-%m-%d %H:%M:%S')
+    next_run=$(date -r "$next_timestamp" '+%Y-%m-%d %H:%M:%S %z' 2>/dev/null || date '+%Y-%m-%d %H:%M:%S %z')
     echo "Next certificate renewal check will be at ${next_run}"
 
     # Store PID of sleep process and wait for it
