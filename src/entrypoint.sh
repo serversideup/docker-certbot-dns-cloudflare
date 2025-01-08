@@ -1,8 +1,12 @@
 #!/bin/sh
 
-# Listen for "docker stop": https://superuser.com/a/1299463/57662
-# shellcheck disable=SC3048
-trap "echo Shutdown requested; exit 0" SIGTERM
+# Validate required environment variables
+for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
+    if [ -z "$(eval echo \$$var)" ]; then
+        echo "Error: $var environment variable is not set"
+        exit 1
+    fi
+done
 
 # Permissions must be created after volumes have been mounted; otherwise, windows file system permissions will override
 # the permissions set within the container.
@@ -32,14 +36,6 @@ echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
 echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
 echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
-
-# Validate required environment variables
-for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
-    if [ -z "$(eval echo \$$var)" ]; then
-        echo "Error: $var environment variable is not set"
-        exit 1
-    fi
-done
 
 # Create Cloudflare configuration file
 echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > /cloudflare.ini
