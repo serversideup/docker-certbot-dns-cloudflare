@@ -20,11 +20,10 @@ configure_windows_file_permissions() {
 # Workaround https://github.com/microsoft/wsl/issues/12250 by replacing symlinks with direct copies of the files they
 # reference.
 replace_symlinks() {
-    # shellcheck disable=SC3043
-    local dir="$1"
+    target_dir="$1"
 
     # Iterate over all items in the directory
-    for item in "$dir"/*; do
+    for item in "$target_dir"/*; do
         if [ -L "$item" ]; then
             # If the item is a symlink
             target=$(readlink -f "$item")
@@ -116,7 +115,10 @@ run_certbot
 
 # Infinite loop to keep the container running and periodically check for renewals
 while true; do
-    next_run=$(date -d "@$(($(date +%s) + RENEWAL_INTERVAL))" '+%Y-%m-%d %H:%M:%S')
+    # POSIX-compliant way to show next run time
+    current_timestamp=$(date +%s)
+    next_timestamp=$((current_timestamp + RENEWAL_INTERVAL))
+    next_run=$(date -r "$next_timestamp" '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date '+%Y-%m-%d %H:%M:%S')
     echo "Next certificate renewal check will be at ${next_run}"
 
     # Use wait with timeout to allow for signal interruption
