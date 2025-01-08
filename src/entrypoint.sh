@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Listen for "docker stop": https://superuser.com/a/1299463/57662
+# shellcheck disable=SC3048
+trap "echo Shutdown requested; exit 0" SIGTERM
+
 # Permissions must be created after volumes have been mounted; otherwise, windows file system permissions will override
 # the permissions set within the container.
 mkdir -p /etc/letsencrypt/accounts /var/log/letsencrypt /var/lib/letsencrypt
@@ -86,6 +90,13 @@ replace_symlinks() {
     done
 }
 
+cleanup() {
+    echo "Shutdown requested, exiting gracefully..."
+    exit 0
+}
+
+trap cleanup SIGTERM SIGINT
+
 # Run certbot initially
 run_certbot
 
@@ -93,7 +104,16 @@ run_certbot
 while true; do
     next_run=$(date -d "@$(($(date +%s) + RENEWAL_INTERVAL))" '+%Y-%m-%d %H:%M:%S')
     echo "Next certificate renewal check will be at ${next_run}"
-    sleep "$RENEWAL_INTERVAL"
+
+    # Use wait with timeout to allow for signal interruption
+    sleep $RENEWAL_INTERVAL & 
+    wait $!
+
+    # Check if we received a signal
+    if [ $? -gt 128 ]; then
+        cleanup
+    fi
+
     if ! run_certbot; then
         echo "Error: Certificate renewal failed. Exiting."
         exit 1
