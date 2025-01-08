@@ -11,8 +11,12 @@ cat << "EOF"
                 ||     ||
 EOF
 
+if [ -n "$CERTBOT_DOMAIN" ] && [ -z "$CERTBOT_DOMAINS" ]; then
+  CERTBOT_DOMAINS=$CERTBOT_DOMAIN
+fi
+
 echo "🚀 Let's Get Encrypted! 🚀"
-echo "🌐 Domain: $CERTBOT_DOMAIN"
+echo "🌐 Domain(s): $CERTBOT_DOMAINS"
 echo "📧 Email: $CERTBOT_EMAIL"
 echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
 echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
@@ -20,7 +24,7 @@ echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
 
 # Validate required environment variables
-for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAIN CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
+for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
     if [ -z "$(eval echo \$$var)" ]; then
         echo "Error: $var environment variable is not set"
         exit 1
@@ -35,7 +39,7 @@ run_certbot() {
     certbot certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials /cloudflare.ini \
-        -d "$CERTBOT_DOMAIN" \
+        -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
         --email "$CERTBOT_EMAIL" \
         --agree-tos \
