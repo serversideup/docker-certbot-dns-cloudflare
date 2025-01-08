@@ -121,14 +121,17 @@ while true; do
     next_run=$(date -r "$next_timestamp" '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date '+%Y-%m-%d %H:%M:%S')
     echo "Next certificate renewal check will be at ${next_run}"
 
-    # Use wait with timeout to allow for signal interruption
+    # Store PID of sleep process and wait for it
     sleep "$RENEWAL_INTERVAL" & 
-    wait $!
+    sleep_pid=$!
+    wait $sleep_pid
+    wait_status=$?
 
-    # Check if we received a signal
-    if [ $? -gt 128 ]; then
-        cleanup
-    fi
+    # Check if we received a signal (more portable check)
+    case $wait_status in
+        0) : ;; # Normal exit
+        *) cleanup ;;
+    esac
 
     if ! run_certbot; then
         echo "Error: Certificate renewal failed. Exiting."
