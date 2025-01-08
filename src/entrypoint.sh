@@ -90,6 +90,13 @@ replace_symlinks() {
     done
 }
 
+cleanup() {
+    echo "Shutdown requested, exiting gracefully..."
+    exit 0
+}
+
+trap cleanup SIGTERM SIGINT
+
 # Run certbot initially
 run_certbot
 
@@ -98,9 +105,14 @@ while true; do
     next_run=$(date -d "@$(($(date +%s) + RENEWAL_INTERVAL))" '+%Y-%m-%d %H:%M:%S')
     echo "Next certificate renewal check will be at ${next_run}"
 
-    # Listen for "docker stop": https://superuser.com/a/1299463/57662
-    sleep "$RENEWAL_INTERVAL" &
-    wait
+    # Use wait with timeout to allow for signal interruption
+    sleep $RENEWAL_INTERVAL & 
+    wait $!
+
+    # Check if we received a signal
+    if [ $? -gt 128 ]; then
+        cleanup
+    fi
 
     if ! run_certbot; then
         echo "Error: Certificate renewal failed. Exiting."
