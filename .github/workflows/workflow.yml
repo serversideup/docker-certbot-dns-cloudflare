@@ -1,4 +1,4 @@
-name: Workflow
+name: GitHub Actions Workflow Linter
 
 on:
   pull_request: null
@@ -11,8 +11,10 @@ jobs:
     name: Actionlint
     runs-on: ubuntu-22.04
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Analyze workflow files
         uses: docker://rhysd/actionlint:1.7.0
         with:
