@@ -18,7 +18,7 @@ jobs:
     secrets: inherit
 
   update_container_readme:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     name: Push README to Docker Hub
     steps:
       - name: git checkout
