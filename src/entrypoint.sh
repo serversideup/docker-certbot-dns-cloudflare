@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Permissions must be created after volumes have been mounted; otherwise, windows file system permissions will override
+# the permissions set within the container.
+mkdir -p /etc/letsencrypt/accounts /var/log/letsencrypt /var/lib/letsencrypt
+chmod 755 /etc/letsencrypt /var/lib/letsencrypt
+chmod 700 /etc/letsencrypt/accounts /var/log/letsencrypt
+
 cat << "EOF"
  ____________________
 < Certbot, activate! >
@@ -11,8 +17,12 @@ cat << "EOF"
                 ||     ||
 EOF
 
+if [ -n "$CERTBOT_DOMAIN" ] && [ -z "$CERTBOT_DOMAINS" ]; then
+  CERTBOT_DOMAINS=$CERTBOT_DOMAIN
+fi
+
 echo "🚀 Let's Get Encrypted! 🚀"
-echo "🌐 Domain: $CERTBOT_DOMAIN"
+echo "🌐 Domain(s): $CERTBOT_DOMAINS"
 echo "📧 Email: $CERTBOT_EMAIL"
 echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
 echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
@@ -20,7 +30,7 @@ echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
 
 # Validate required environment variables
-for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAIN CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
+for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
     if [ -z "$(eval echo \$$var)" ]; then
         echo "Error: $var environment variable is not set"
         exit 1
@@ -35,11 +45,12 @@ run_certbot() {
     certbot certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials /cloudflare.ini \
-        -d "$CERTBOT_DOMAIN" \
+        -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
         --email "$CERTBOT_EMAIL" \
         --agree-tos \
-        --non-interactive
+        --non-interactive \
+        --strict-permissions
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo "Error: certbot command failed with exit code $exit_code"
