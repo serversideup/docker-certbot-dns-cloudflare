@@ -56,6 +56,34 @@ run_certbot() {
         echo "Error: certbot command failed with exit code $exit_code"
         exit 1
     fi
+
+    if [ "$REPLACE_SYMLINKS" = "true" ]; then
+      replace_symlinks "/etc/letsencrypt/live";
+    fi
+}
+
+# Workaround https://github.com/microsoft/wsl/issues/12250 by replacing symlinks with direct copies of the files they
+# reference.
+replace_symlinks() {
+    # shellcheck disable=SC3043
+    local dir="$1"
+
+    # Iterate over all items in the directory
+    for item in "$dir"/*; do
+        if [ -L "$item" ]; then
+            # If the item is a symlink
+            target=$(readlink -f "$item")
+            if [ -e "$target" ]; then
+                echo "Replacing symlink $item with a copy of $target"
+                cp -r "$target" "$item"
+            else
+                echo "Warning: target $target of symlink $item does not exist"
+            fi
+        elif [ -d "$item" ]; then
+            # If the item is a directory, process it recursively
+            replace_symlinks "$item"
+        fi
+    done
 }
 
 # Run certbot initially
