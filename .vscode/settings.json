@@ -2,6 +2,8 @@
   "cSpell.words": [
     "CERTBOT",
     "certonly",
-    "letsencrypt"
+    "letsencrypt",
+    "PGID",
+    "PUID"
   ]
 }
