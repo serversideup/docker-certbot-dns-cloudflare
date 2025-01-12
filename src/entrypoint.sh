@@ -193,6 +193,11 @@ else
     # Run certbot initially to get the certificates
     run_certbot
 
+    # Exit if interval is zero
+    if [ "$RENEWAL_INTERVAL" = "0" ]; then
+        cleanup
+    fi
+
     # Infinite loop to keep the container running and periodically check for renewals
     while true; do
         # POSIX-compliant way to show next run time
