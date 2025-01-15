@@ -44,7 +44,7 @@ The following environment variables can be used to customize the Certbot contain
 | `DEBUG`                | Enable debug mode (prints more information to the console)            | `false`                    |
 | `PUID`                 | The user ID to run certbot as                                       | `0`                    |
 | `PGID`                 | The group ID to run certbot as                                        | `0`                    |
-| `RENEWAL_INTERVAL`     | Interval between certificate renewal checks                         | 43200 seconds (12 hours) |
+| `RENEWAL_INTERVAL`     | Interval between certificate renewal checks. Set to `0` to disable renewals and only run once.                         | 43200 seconds (12 hours) |
 | `REPLACE_SYMLINKS`     | Replaces symlinks with direct copies of the files they reference (required for Windows) | `false`                    |
 
 ## Usage
