@@ -193,8 +193,9 @@ else
     # Run certbot initially to get the certificates
     run_certbot
 
-    # Exit if interval is zero
+    # If RENEWAL_INTERVAL is set to 0, do not attempt to renew certificates and exit immediately
     if [ "$RENEWAL_INTERVAL" = "0" ]; then
+        echo "Let's Encrypt Renewals are disabled because RENEWAL_INTERVAL=0. Running once and exiting..."
         cleanup
     fi
 
