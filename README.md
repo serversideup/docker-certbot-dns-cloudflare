@@ -31,6 +31,25 @@ The image is based on `certbot/dns-cloudflare:latest`, providing a stable and up
 - Windows support (set `REPLACE_SYMLINKS` to `true`)
 - Native Docker health checks to ensure the server is running
 
+### Works great for orchestrated deployments
+
+We designed this image to work great in orchestrated deployments like Kubernetes, Docker Swarm, or even in Github Actions. Look how simple the syntax is:
+
+```yaml
+  certbot:
+    image: serversideup/certbot-dns-cloudflare
+    volumes:
+      - certbot_data:/etc/letsencrypt
+    environment:
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
+      CERTBOT_EMAIL: "${CERTBOT_EMAIL}"
+      CERTBOT_DOMAINS: "${CERTBOT_DOMAINS}"
+      CERTBOT_KEY_TYPE: "rsa"
+
+  volumes:
+    certbot_data:
+```
+
 ## Environment Variables
 
 The following environment variables can be used to customize the Certbot container:
@@ -40,12 +59,25 @@ The following environment variables can be used to customize the Certbot contain
 | `CERTBOT_DOMAINS`      | Comma-separated list of domains for which to obtain the certificate | - |
 | `CERTBOT_EMAIL`        | Email address for Let's Encrypt notifications                       | - |
 | `CERTBOT_KEY_TYPE`     | Type of private key to generate                                     | `ecdsa` |
-| `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication                         | - |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication (see below how to create one)                         | - |
 | `DEBUG`                | Enable debug mode (prints more information to the console)            | `false`                    |
 | `PUID`                 | The user ID to run certbot as                                       | `0`                    |
 | `PGID`                 | The group ID to run certbot as                                        | `0`                    |
 | `RENEWAL_INTERVAL`     | Interval between certificate renewal checks. Set to `0` to disable renewals and only run once.                         | 43200 seconds (12 hours) |
 | `REPLACE_SYMLINKS`     | Replaces symlinks with direct copies of the files they reference (required for Windows) | `false`                    |
+
+### Creating a Cloudflare API Token
+
+> [!WARNING]  
+> Treat this token like a password. It will grant access to your Cloudflare account and can be used to modify DNS records.
+
+1. Go to the [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens) page.
+2. Click on "Create Token".
+3. Click "Use template" for the "Edit Zone DNS" template.
+4. Change the token name (optional)
+5. Set a specific zone under "Zone Resources" (optional)
+6. Click on "Continue to summary".
+7. Click on "Create Token".
 
 ## Usage
 
@@ -69,25 +101,6 @@ The following environment variables can be used to customize the Certbot contain
    ```
 
 3. The container will automatically generate and renew the certificate.
-
-### Works great for orchestrated deployments
-
-We designed this image to work great in orchestrated deployments like Kubernetes, Docker Swarm, or even in Github Actions. Look how simple the syntax is:
-
-```yaml
-  certbot:
-    image: serversideup/certbot-dns-cloudflare
-    volumes:
-      - certbot_data:/etc/letsencrypt
-    environment:
-      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
-      CERTBOT_EMAIL: "${CERTBOT_EMAIL}"
-      CERTBOT_DOMAINS: "${CERTBOT_DOMAINS}"
-      CERTBOT_KEY_TYPE: "rsa"
-
-  volumes:
-    certbot_data:
-```
 
 ## Resources
 
