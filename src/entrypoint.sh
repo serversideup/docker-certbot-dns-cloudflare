@@ -141,6 +141,11 @@ validate_environment_variables() {
 
 trap cleanup TERM INT
 
+# Ensure backwards compatibility with the old CERTBOT_DOMAIN environment variable
+if [ -n "$CERTBOT_DOMAIN" ] && [ -z "$CERTBOT_DOMAINS" ]; then
+  CERTBOT_DOMAINS=$CERTBOT_DOMAIN
+fi
+
 validate_environment_variables
 
 if ! is_default_privileges; then
@@ -149,11 +154,6 @@ fi
 
 if [ "$REPLACE_SYMLINKS" = "true" ]; then
     configure_windows_file_permissions
-fi
-
-# Ensure backwards compatibility with the old CERTBOT_DOMAIN environment variable
-if [ -n "$CERTBOT_DOMAIN" ] && [ -z "$CERTBOT_DOMAINS" ]; then
-  CERTBOT_DOMAINS=$CERTBOT_DOMAIN
 fi
 
 cat << "EOF"
