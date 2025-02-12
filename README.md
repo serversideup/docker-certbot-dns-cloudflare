@@ -60,6 +60,7 @@ The following environment variables can be used to customize the Certbot contain
 | `CERTBOT_EMAIL`        | Email address for Let's Encrypt notifications                       | - |
 | `CERTBOT_KEY_TYPE`     | Type of private key to generate                                     | `ecdsa` |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication (see below how to create one)                         | - |
+| `CERTBOT_SERVER`       | The ACME server URL                                                 | `https://acme-v02.api.letsencrypt.org/directory` |
 | `DEBUG`                | Enable debug mode (prints more information to the console)            | `false`                    |
 | `PUID`                 | The user ID to run certbot as                                       | `0`                    |
 | `PGID`                 | The group ID to run certbot as                                        | `0`                    |
