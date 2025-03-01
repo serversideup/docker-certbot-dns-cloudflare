@@ -99,6 +99,8 @@ The following environment variables can be used to customize the Certbot contain
     -v /path/to/your/certs:/etc/letsencrypt \
    serversideup/certbot-dns-cloudflare:latest
    ```
+> [!TIP]
+> For Wildcard Certificates, use the following order for the Docker instance health check: `domain.name, *.domain.name`
 
 3. The container will automatically generate and renew the certificate.
 
