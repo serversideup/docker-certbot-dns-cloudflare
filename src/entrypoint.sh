@@ -26,7 +26,7 @@ debug_print() {
 
 configure_uid_and_gid() {
     debug_print "Preparing environment for $PUID:$PGID..."
-    
+
     # Handle existing user with the same UID
     if id -u "${PUID}" >/dev/null 2>&1; then
         old_user=$(id -nu "${PUID}")
@@ -111,6 +111,7 @@ run_certbot() {
         -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
         --email "$CERTBOT_EMAIL" \
+        --server "$CERTBOT_SERVER" \
         --agree-tos \
         --non-interactive \
         --strict-permissions
@@ -121,7 +122,7 @@ run_certbot() {
     fi
 
     if [ "$REPLACE_SYMLINKS" = "true" ]; then
-      replace_symlinks "/etc/letsencrypt/live";
+        replace_symlinks "/etc/letsencrypt/live"
     fi
 }
 
@@ -143,7 +144,7 @@ trap cleanup TERM INT
 
 # Ensure backwards compatibility with the old CERTBOT_DOMAIN environment variable
 if [ -n "$CERTBOT_DOMAIN" ] && [ -z "$CERTBOT_DOMAINS" ]; then
-  CERTBOT_DOMAINS=$CERTBOT_DOMAIN
+    CERTBOT_DOMAINS=$CERTBOT_DOMAIN
 fi
 
 validate_environment_variables
@@ -156,7 +157,7 @@ if [ "$REPLACE_SYMLINKS" = "true" ]; then
     configure_windows_file_permissions
 fi
 
-cat << "EOF"
+cat <<"EOF"
  ____________________
 < Certbot, activate! >
  --------------------
@@ -172,11 +173,12 @@ echo "🌐 Domain(s): $CERTBOT_DOMAINS"
 echo "📧 Email: $CERTBOT_EMAIL"
 echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
 echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
+echo "🌐 Server Address: $CERTBOT_SERVER"
 echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
 
 # Create Cloudflare configuration file
-echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > /cloudflare.ini
+echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" >/cloudflare.ini
 chmod 600 /cloudflare.ini
 if ! is_default_privileges; then
     chown "${PUID}:${PGID}" /cloudflare.ini
@@ -208,15 +210,15 @@ else
         echo "Next certificate renewal check will be at ${next_run}"
 
         # Store PID of sleep process and wait for it
-        sleep "$RENEWAL_INTERVAL" & 
+        sleep "$RENEWAL_INTERVAL" &
         sleep_pid=$!
         wait $sleep_pid
         wait_status=$?
 
         # Check if we received a signal (more portable check)
         case $wait_status in
-            0) : ;; # Normal exit
-            *) cleanup ;;
+        0) : ;; # Normal exit
+        *) cleanup ;;
         esac
 
         if ! run_certbot; then

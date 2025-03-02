@@ -11,6 +11,7 @@ ENV CERTBOT_DOMAINS="" \
     CERTBOT_EMAIL="" \
     CERTBOT_KEY_TYPE="ecdsa" \
     CLOUDFLARE_API_TOKEN="" \
+    CERTBOT_SERVER="https://acme-v02.api.letsencrypt.org/directory" \
     DEBUG=false \
     PUID=0 \
     PGID=0 \
