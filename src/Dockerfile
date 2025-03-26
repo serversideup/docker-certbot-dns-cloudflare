@@ -15,7 +15,8 @@ ENV CERTBOT_DOMAINS="" \
     PUID=0 \
     PGID=0 \
     RENEWAL_INTERVAL=43200 \
-    REPLACE_SYMLINKS=false
+    REPLACE_SYMLINKS=false \
+    CLOUDFLARE_PROPAGATION_SECONDS="" 
 
 COPY --chmod=700 entrypoint.sh /entrypoint.sh
 

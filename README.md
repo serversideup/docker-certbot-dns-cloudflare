@@ -65,6 +65,7 @@ The following environment variables can be used to customize the Certbot contain
 | `PGID`                 | The group ID to run certbot as                                        | `0`                    |
 | `RENEWAL_INTERVAL`     | Interval between certificate renewal checks. Set to `0` to disable renewals and only run once.                         | 43200 seconds (12 hours) |
 | `REPLACE_SYMLINKS`     | Replaces symlinks with direct copies of the files they reference (required for Windows) | `false`                    |
+| `CLOUDFLARE_PROPAGATION_SECONDS` | Wait time (in seconds) after setting DNS TXT records before validation. Useful if DNS propagation is slow. | `10` |
 
 ### Creating a Cloudflare API Token
 
