@@ -11,12 +11,12 @@ ENV CERTBOT_DOMAINS="" \
     CERTBOT_EMAIL="" \
     CERTBOT_KEY_TYPE="ecdsa" \
     CLOUDFLARE_API_TOKEN="" \
+    CLOUDFLARE_PROPAGATION_SECONDS="10" \
     DEBUG=false \
     PUID=0 \
     PGID=0 \
     RENEWAL_INTERVAL=43200 \
     REPLACE_SYMLINKS=false \
-    CLOUDFLARE_PROPAGATION_SECONDS="" 
 
 COPY --chmod=700 entrypoint.sh /entrypoint.sh
 
