@@ -180,10 +180,14 @@ echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
 
 # Create Cloudflare configuration file
-echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > "$CLOUDFLARE_CREDENTIALS_FILE"
-chmod 600 "$CLOUDFLARE_CREDENTIALS_FILE"
-if ! is_default_privileges; then
-    chown "${PUID}:${PGID}" "$CLOUDFLARE_CREDENTIALS_FILE"
+if [ -f "$CLOUDFLARE_CREDENTIALS_FILE" ]; then
+    echo "Using existing Cloudflare credentials file: $CLOUDFLARE_CREDENTIALS_FILE"
+else
+    echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > "$CLOUDFLARE_CREDENTIALS_FILE"
+    chmod 600 "$CLOUDFLARE_CREDENTIALS_FILE"
+    if ! is_default_privileges; then
+        chown "${PUID}:${PGID}" "$CLOUDFLARE_CREDENTIALS_FILE"
+    fi
 fi
 
 # Check if a command was passed to the container
