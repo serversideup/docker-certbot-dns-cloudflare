@@ -60,6 +60,8 @@ The following environment variables can be used to customize the Certbot contain
 | `CERTBOT_EMAIL`        | Email address for Let's Encrypt notifications                       | - |
 | `CERTBOT_KEY_TYPE`     | Type of private key to generate                                     | `ecdsa` |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication (see below how to create one)                         | - |
+| `CLOUDFLARE_CREDENTIALS_FILE` | Path to the Cloudflare credentials file. | `/cloudflare.ini` |
+| `CLOUDFLARE_PROPAGATION_SECONDS` | Wait time (in seconds) after setting DNS TXT records before validation. Useful if DNS propagation is slow. | `10` |
 | `DEBUG`                | Enable debug mode (prints more information to the console)            | `false`                    |
 | `PUID`                 | The user ID to run certbot as                                       | `0`                    |
 | `PGID`                 | The group ID to run certbot as                                        | `0`                    |
