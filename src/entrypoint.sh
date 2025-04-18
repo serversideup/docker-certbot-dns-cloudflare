@@ -129,7 +129,7 @@ run_certbot() {
 
 validate_environment_variables() {
     # Validate required environment variables
-    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE; do
+    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS; do
         if [ -z "$(eval echo \$$var)" ]; then
             echo "Error: $var environment variable is not set"
             exit 1
