@@ -180,8 +180,8 @@ echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
 
 # Create Cloudflare configuration file
-echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" >/cloudflare.ini
-chmod 600 /cloudflare.ini
+echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > "$CLOUDFLARE_CREDENTIALS_FILE"
+chmod 600 "$CLOUDFLARE_CREDENTIALS_FILE"
 if ! is_default_privileges; then
     chown "${PUID}:${PGID}" "$CLOUDFLARE_CREDENTIALS_FILE"
 fi
