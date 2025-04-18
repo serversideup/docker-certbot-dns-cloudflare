@@ -107,7 +107,8 @@ run_certbot() {
 
     $certbot_cmd $debug_flag certonly \
         --dns-cloudflare \
-        --dns-cloudflare-credentials /cloudflare.ini \
+        --dns-cloudflare-credentials "$CLOUDFLARE_CREDENTIALS_FILE" \
+        --dns-cloudflare-propagation-seconds "$CLOUDFLARE_PROPAGATION_SECONDS" \
         -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
         --email "$CERTBOT_EMAIL" \
@@ -171,9 +172,10 @@ EOF
 echo "🚀 Let's Get Encrypted! 🚀"
 echo "🌐 Domain(s): $CERTBOT_DOMAINS"
 echo "📧 Email: $CERTBOT_EMAIL"
+echo "🌐 Certbot Server: $CERTBOT_SERVER"
 echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
 echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
-echo "🌐 Server Address: $CERTBOT_SERVER"
+echo "🕒 DNS Propagation Wait: $CLOUDFLARE_PROPAGATION_SECONDS seconds"
 echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
 
@@ -181,7 +183,7 @@ echo "-----------------------------------------------------------"
 echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" >/cloudflare.ini
 chmod 600 /cloudflare.ini
 if ! is_default_privileges; then
-    chown "${PUID}:${PGID}" /cloudflare.ini
+    chown "${PUID}:${PGID}" "$CLOUDFLARE_CREDENTIALS_FILE"
 fi
 
 # Check if a command was passed to the container
