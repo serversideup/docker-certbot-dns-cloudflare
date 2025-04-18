@@ -107,7 +107,7 @@ run_certbot() {
 
     $certbot_cmd $debug_flag certonly \
         --dns-cloudflare \
-        --dns-cloudflare-credentials /cloudflare.ini \
+        --dns-cloudflare-credentials "$CLOUDFLARE_CREDENTIALS_FILE" \
         --dns-cloudflare-propagation-seconds "$CLOUDFLARE_PROPAGATION_SECONDS" \
         -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
@@ -178,10 +178,10 @@ echo "Let's Encrypt, shall we?"
 echo "-----------------------------------------------------------"
 
 # Create Cloudflare configuration file
-echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > /cloudflare.ini
-chmod 600 /cloudflare.ini
+echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > "$CLOUDFLARE_CREDENTIALS_FILE"
+chmod 600 "$CLOUDFLARE_CREDENTIALS_FILE"
 if ! is_default_privileges; then
-    chown "${PUID}:${PGID}" /cloudflare.ini
+    chown "${PUID}:${PGID}" "$CLOUDFLARE_CREDENTIALS_FILE"
 fi
 
 # Check if a command was passed to the container
