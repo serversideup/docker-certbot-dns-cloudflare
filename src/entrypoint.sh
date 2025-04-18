@@ -89,11 +89,6 @@ is_default_privileges() {
 }
 
 run_certbot() {
-    # Optional propagation seconds
-    propagation_arg=""
-    if [ -n "$CLOUDFLARE_PROPAGATION_SECONDS" ]; then
-        propagation_arg="--dns-cloudflare-propagation-seconds $CLOUDFLARE_PROPAGATION_SECONDS"
-    fi    
     # Ensure the log directory is set to 700
     chmod 700 /var/log/letsencrypt
     chown "${PUID}:${PGID}" /var/log/letsencrypt
@@ -113,7 +108,7 @@ run_certbot() {
     $certbot_cmd $debug_flag certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials /cloudflare.ini \
-        $propagation_arg \
+        --dns-cloudflare-propagation-seconds "$CLOUDFLARE_PROPAGATION_SECONDS" \
         -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
         --email "$CERTBOT_EMAIL" \
