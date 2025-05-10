@@ -11,6 +11,7 @@ ENV CERTBOT_DOMAINS="" \
     CERTBOT_EMAIL="" \
     CERTBOT_KEY_TYPE="ecdsa" \
     CERTBOT_SERVER="https://acme-v02.api.letsencrypt.org/directory" \
+    CERTBOT_EXPAND="" \
     CLOUDFLARE_API_TOKEN="" \
     CLOUDFLARE_CREDENTIALS_FILE="/cloudflare.ini" \
     CLOUDFLARE_PROPAGATION_SECONDS="10" \
