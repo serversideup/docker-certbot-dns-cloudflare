@@ -105,6 +105,13 @@ run_certbot() {
     debug_flag=""
     [ "$DEBUG" = "true" ] && debug_flag="-v"
 
+    # Check if we need to expand
+    if [ "$CERTBOT_EXPAND" == "true" ]; then
+        expand="--expand"
+    else
+        expand=""
+    fi
+
     $certbot_cmd $debug_flag certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials "$CLOUDFLARE_CREDENTIALS_FILE" \
@@ -113,6 +120,7 @@ run_certbot() {
         --key-type "$CERTBOT_KEY_TYPE" \
         --email "$CERTBOT_EMAIL" \
         --server "$CERTBOT_SERVER" \
+        $expand \
         --agree-tos \
         --non-interactive \
         --strict-permissions
