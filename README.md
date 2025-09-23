@@ -56,7 +56,9 @@ The following environment variables can be used to customize the Certbot contain
 
 | Variable               | Description                                                         | Default Value |
 |------------------------|---------------------------------------------------------------------|---------------|
-| `CERTBOT_DOMAINS`      | Comma-separated list of domains for which to obtain the certificate | - |
+| `CERTBOT_DOMAINS`      | Comma-separated list of domains for which to obtain the certificate (example: `example.com,www.example.com`) | - |
+| `CERTBOT_CERT_NAME`    | Explicit certificate name to update/modify ([See official docs →](https://eff-certbot.readthedocs.io/en/stable/using.html#changing-a-certificate-s-domains)) | - |
+| `CERTBOT_EXPAND`       | **DEPRECATED**: Expand existing certificate to add domains (use CERTBOT_CERT_NAME instead, [see official docs →](https://eff-certbot.readthedocs.io/en/stable/using.html#re-creating-and-updating-existing-certificates)) | `false` |
 | `CERTBOT_EMAIL`        | Email address for Let's Encrypt notifications                       | - |
 | `CERTBOT_KEY_TYPE`     | Type of private key to generate                                     | `ecdsa` |
 | `CERTBOT_SERVER`       | The ACME server URL                                                 | `https://acme-v02.api.letsencrypt.org/directory` |
