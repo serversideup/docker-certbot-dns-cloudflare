@@ -115,7 +115,8 @@ run_certbot() {
         --server "$CERTBOT_SERVER" \
         --agree-tos \
         --non-interactive \
-        --strict-permissions
+        --strict-permissions \
+        --preferred-chain="ISRG Root X1
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo "Error: certbot command failed with exit code $exit_code"
