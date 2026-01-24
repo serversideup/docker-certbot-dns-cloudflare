@@ -5,6 +5,10 @@ default_gid=0
 default_unprivileged_user=certbot
 default_unprivileged_group=certbot
 
+# Setting permissions
+chmod 755 /etc/letsencrypt
+chown $PUID:$PGID /etc/letsencrypt
+
 if [ "$DEBUG" = "true" ]; then
     set -x
 fi
@@ -129,7 +133,7 @@ run_certbot() {
 
 validate_environment_variables() {
     # Validate required environment variables
-    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS; do
+    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS HOST_HOSTNAME; do
         if [ -z "$(eval echo \$$var)" ]; then
             echo "Error: $var environment variable is not set"
             exit 1
@@ -209,6 +213,12 @@ else
 
     # Infinite loop to keep the container running and periodically check for renewals
     while true; do
+		# Update unraid bundle file with fullchain and privkey
+		echo "Updating unraid bundle..."
+		cat /etc/letsencrypt/live/$CERTBOT_DOMAINS/fullchain.pem > /etc/unraidssl/${HOST_HOSTNAME}_unraid_bundle.pem
+		cat /etc/letsencrypt/live/$CERTBOT_DOMAINS/privkey.pem >> /etc/unraidssl/${HOST_HOSTNAME}_unraid_bundle.pem
+		echo "Done. File /boot/config/ssl/certs/{HOST_HOSTNAME}_unraid_bundle.pem updated."
+
         # POSIX-compliant way to show next run time
         current_timestamp=$(date +%s)
         next_timestamp=$((current_timestamp + RENEWAL_INTERVAL))
