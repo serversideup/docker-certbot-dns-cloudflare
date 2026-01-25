@@ -133,7 +133,7 @@ run_certbot() {
 
 validate_environment_variables() {
     # Validate required environment variables
-    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS HOST_HOSTNAME; do
+    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS; do
         if [ -z "$(eval echo \$$var)" ]; then
             echo "Error: $var environment variable is not set"
             exit 1
@@ -215,9 +215,9 @@ else
     while true; do
 		# Update unraid bundle file with fullchain and privkey
 		echo "Updating unraid bundle..."
-		cat /etc/letsencrypt/live/$CERTBOT_DOMAINS/fullchain.pem > /etc/unraidssl/${HOST_HOSTNAME}_unraid_bundle.pem
-		cat /etc/letsencrypt/live/$CERTBOT_DOMAINS/privkey.pem >> /etc/unraidssl/${HOST_HOSTNAME}_unraid_bundle.pem
-		echo "Done. File /boot/config/ssl/certs/{HOST_HOSTNAME}_unraid_bundle.pem updated."
+		cat /etc/letsencrypt/live/$CERTBOT_DOMAINS/fullchain.pem > /etc/ssl/unraid_bundle.pem
+		cat /etc/letsencrypt/live/$CERTBOT_DOMAINS/privkey.pem >> /etc/ssl/unraid_bundle.pem
+		echo "Done. Unraid SSL bundle updated."
 
         # POSIX-compliant way to show next run time
         current_timestamp=$(date +%s)
