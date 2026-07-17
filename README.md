@@ -59,7 +59,7 @@ The following environment variables can be used to customize the Certbot contain
 | `CERTBOT_DOMAINS`      | Comma-separated list of domains for which to obtain the certificate (example: `example.com,www.example.com`) | - |
 | `CERTBOT_CERT_NAME`    | Explicit certificate name to update/modify ([See official docs →](https://eff-certbot.readthedocs.io/en/stable/using.html#changing-a-certificate-s-domains)) | - |
 | `CERTBOT_EXPAND`       | **DEPRECATED**: Expand existing certificate to add domains (use CERTBOT_CERT_NAME instead, [see official docs →](https://eff-certbot.readthedocs.io/en/stable/using.html#re-creating-and-updating-existing-certificates)) | `false` |
-| `CERTBOT_EMAIL`        | **Optional.** Email address for Let's Encrypt notifications. If omitted, the container will register with Let's Encrypt using `--register-unsafely-without-email`.                       | - |
+| `CERTBOT_EMAIL`        | **Optional.** Email address for your Let's Encrypt account. If omitted, the container registers with `--register-unsafely-without-email`. This is safe for most setups since [Let's Encrypt no longer sends expiration notification emails](https://letsencrypt.org/2025/06/26/expiration-notification-service-has-ended/). | - |
 | `CERTBOT_KEY_TYPE`     | Type of private key to generate                                     | `ecdsa` |
 | `CERTBOT_SERVER`       | The ACME server URL                                                 | `https://acme-v02.api.letsencrypt.org/directory` |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API token for DNS authentication (see below how to create one)                         | - |
@@ -70,11 +70,26 @@ The following environment variables can be used to customize the Certbot contain
 | `PGID`                 | The group ID to run certbot as                                        | `0`                    |
 | `RENEWAL_INTERVAL`     | Interval between certificate renewal checks. Set to `0` to disable renewals and only run once.                         | 43200 seconds (12 hours) |
 | `REPLACE_SYMLINKS`     | Replaces symlinks with direct copies of the files they reference (required for Windows) | `false`                    |
-| `PROXY_TYPE`           | Proxy type for routing Certbot traffic. Supported values: `none`, `socks5`, `socks4`, `http`, `https`. When `none`, no proxy is used. | `none` |
-| `PROXY_HOST`           | Proxy hostname or IP address, required when `PROXY_TYPE` is not `none`. | - |
-| `PROXY_PORT`           | Proxy port, required when `PROXY_TYPE` is not `none`. | - |
-| `PROXY_USERNAME`       | Optional username for authenticated proxies. | - |
-| `PROXY_PASSWORD`       | Optional password for authenticated proxies. | - |
+
+### Using a proxy
+
+Certbot is built on Python's [`requests` library, which natively supports the standard proxy environment variables](https://requests.readthedocs.io/en/latest/user/advanced/#proxies) (`HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`). Both the ACME (Let's Encrypt) traffic and the Cloudflare API calls will respect these variables — no extra configuration required:
+
+```yaml
+environment:
+  # HTTP proxy
+  HTTPS_PROXY: "http://proxy.example.com:3128"
+```
+
+SOCKS proxies are also supported (the image ships with [PySocks](https://pypi.org/project/PySocks/)), including authentication:
+
+```yaml
+environment:
+  # SOCKS5 proxy with authentication.
+  # Use the "socks5h" scheme to have the proxy resolve DNS (prevents DNS leaks);
+  # use "socks5" if you want DNS resolved locally instead.
+  HTTPS_PROXY: "socks5h://username:password@proxy.example.com:1080"
+```
 
 ### Creating a Cloudflare API Token
 

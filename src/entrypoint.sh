@@ -88,54 +88,6 @@ is_default_privileges() {
     [ "${PUID:-$default_uid}" = "$default_uid" ] && [ "${PGID:-$default_gid}" = "$default_gid" ]
 }
 
-configure_proxychains() {
-    # Build /etc/proxychains.conf from environment variables when a proxy is configured
-    proxy_type="${PROXY_TYPE:-none}"
-
-    if [ "$proxy_type" = "none" ]; then
-        debug_print "Proxychains proxy not configured (PROXY_TYPE=none)."
-        return 0
-    fi
-
-    case "$proxy_type" in
-        socks5|socks4|http|https)
-            ;;
-        *)
-            echo "Error: Invalid PROXY_TYPE '$proxy_type'. Supported values: socks5, socks4, http, https, none"
-            exit 1
-            ;;
-    esac
-
-    if [ -z "$PROXY_HOST" ] || [ -z "$PROXY_PORT" ]; then
-        echo "Error: PROXY_HOST and PROXY_PORT must be set when PROXY_TYPE is not 'none'"
-        exit 1
-    fi
-
-    # Use the default path that proxychains4 inside this image reads by default
-    conf_dir="/etc/proxychains"
-    conf_path="${conf_dir}/proxychains.conf"
-
-    mkdir -p "$conf_dir"
-
-    debug_print "Generating $conf_path for proxy $proxy_type $PROXY_HOST:$PROXY_PORT"
-
-    {
-        echo "strict_chain"
-        echo "proxy_dns"
-        echo
-        echo "[ProxyList]"
-        if [ -n "$PROXY_USERNAME" ] && [ -n "$PROXY_PASSWORD" ]; then
-            echo "${proxy_type} ${PROXY_HOST} ${PROXY_PORT} ${PROXY_USERNAME} ${PROXY_PASSWORD}"
-        else
-            echo "${proxy_type} ${PROXY_HOST} ${PROXY_PORT}"
-        fi
-    } > "$conf_path"
-
-    # Ensure the certbot user can read the config
-    chmod 644 "$conf_path"
-    chown "${default_unprivileged_user}:${default_unprivileged_group}" "$conf_path" 2>/dev/null || true
-}
-
 run_certbot() {
     # Ensure the log directory is set to 700
     chmod 700 /var/log/letsencrypt
@@ -145,12 +97,6 @@ run_certbot() {
         certbot_cmd="certbot"
     else
         certbot_cmd="su-exec ${default_unprivileged_user} certbot"
-    fi
-
-    # Optionally wrap certbot with proxychains to route traffic via a proxy
-    if [ "${PROXY_TYPE:-none}" != "none" ]; then
-        debug_print "Wrapping certbot with proxychains4 based on proxy settings"
-        certbot_cmd="proxychains4 ${certbot_cmd}"
     fi
 
     debug_print "Running certbot with command: $certbot_cmd"
@@ -168,21 +114,21 @@ run_certbot() {
         set -- "$@" --expand
     fi
 
-    # Run certbot command
-    email_args=""
+    # Register with an email if provided, otherwise register without one
+    # (Let's Encrypt no longer sends expiration emails as of June 2025)
     if [ -n "$CERTBOT_EMAIL" ]; then
-        email_args="--email $CERTBOT_EMAIL"
+        set -- "$@" --email "$CERTBOT_EMAIL"
     else
-        email_args="--register-unsafely-without-email"
+        set -- "$@" --register-unsafely-without-email
     fi
 
+    # Run certbot command
     $certbot_cmd $debug_flag certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials "$CLOUDFLARE_CREDENTIALS_FILE" \
         --dns-cloudflare-propagation-seconds "$CLOUDFLARE_PROPAGATION_SECONDS" \
         -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
-        $email_args \
         --server "$CERTBOT_SERVER" \
         --agree-tos \
         --non-interactive \
@@ -222,8 +168,6 @@ fi
 
 validate_environment_variables
 
-configure_proxychains
-
 if ! is_default_privileges; then
     configure_uid_and_gid
 fi
@@ -245,7 +189,7 @@ EOF
 
 echo "🚀 Let's Get Encrypted! 🚀"
 echo "🌐 Domain(s): $CERTBOT_DOMAINS"
-echo "📧 Email: $CERTBOT_EMAIL"
+echo "📧 Email: ${CERTBOT_EMAIL:-(none — registering without an email address)}"
 echo "🌐 Certbot Server: $CERTBOT_SERVER"
 echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
 echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
