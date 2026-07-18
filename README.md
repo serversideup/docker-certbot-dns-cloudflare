@@ -128,7 +128,7 @@ Need help getting started? Join our Discord community and we'll help you out!
 <a href="https://serversideup.net/discord"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/join-discord.svg" title="Join Discord"></a>
 
 ## Our Sponsors
-All of our software is free an open to the world. None of this can be brought to you without the financial backing of our sponsors.
+All of our software is free and open to the world. None of this can be brought to you without the financial backing of our sponsors.
 
 <p align="center"><a href="https://github.com/sponsors/serversideup"><img src="https://521public.s3.amazonaws.com/serversideup/sponsors/sponsor-box.png" alt="Sponsors"></a></p>
 
