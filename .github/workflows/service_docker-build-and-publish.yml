@@ -7,19 +7,19 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v7
 
       - name: Analyze workflow files
-        uses: docker://rhysd/actionlint:1.7.6
+        uses: docker://rhysd/actionlint:1.7.12
         with:
           args: "-color -verbose -shellcheck="
 
   docker-publish:
     needs: lint
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v7
