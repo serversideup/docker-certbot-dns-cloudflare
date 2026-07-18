@@ -11,7 +11,7 @@
 
 # Certbot Cloudflare DNS Docker Container
 
-This container is used to generate and automatically renew SSL certificates from Let's Encrypt using the Cloudflare DNS plugin. It's based off the [official Certbot image](https://hub.docker.com/r/certbot/dns-cloudflare) with some modifications to make it more flexible and configurable.
+SSL certificates that renew themselves. Built on the [official Certbot image](https://hub.docker.com/r/certbot/dns-cloudflare) with an improved user experience, this image generates free Let's Encrypt certificates via Cloudflare DNS validation, renews them automatically, and saves them to a volume any container can read — so even applications without Let's Encrypt support get always-valid certificates. No config files, no exposed ports — just set a few environment variables and deploy.
 
 | Docker Image | Size |
 |-------------|------|
@@ -142,13 +142,13 @@ All of our software is free and open to the world. None of this can be brought t
 <!-- supporters --><p align="center"><a href="https://github.com/sponsors/serversideup"><img src="https://521public.s3.amazonaws.com/serversideup/sponsors/sponsor-empty-state.png" alt="Sponsors"></a></p><!-- supporters -->
 
 ## About Us
-We're [Dan](https://twitter.com/danpastori) and [Jay](https://twitter.com/jaydrogers) - a two person team with a passion for open source products. We created [Server Side Up](https://serversideup.net) to help share what we learn.
+We're [Dan](https://x.com/danpastori) and [Jay](https://x.com/jaydrogers) - a two-person team with a passion for open source products. We created [Server Side Up](https://serversideup.net) to help share what we learn.
 
 <div align="center">
 
 | <div align="center">Dan Pastori</div>                  | <div align="center">Jay Rogers</div>                                 |
 | ----------------------------- | ------------------------------------------ |
-| <div align="center"><a href="https://twitter.com/danpastori"><img src="https://serversideup.net/wp-content/uploads/2023/08/dan.jpg" title="Dan Pastori" width="150px"></a><br /><a href="https://twitter.com/danpastori"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px"></a><a href="https://github.com/danpastori"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px"></a></div>                        | <div align="center"><a href="https://twitter.com/jaydrogers"><img src="https://serversideup.net/wp-content/uploads/2023/08/jay.jpg" title="Jay Rogers" width="150px"></a><br /><a href="https://twitter.com/jaydrogers"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px"></a><a href="https://github.com/jaydrogers"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px"></a></div>                                       |
+| <div align="center"><a href="https://x.com/danpastori"><img src="https://serversideup.net/wp-content/uploads/2023/08/dan.jpg" title="Dan Pastori" width="150px"></a><br /><a href="https://x.com/danpastori"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px"></a><a href="https://github.com/danpastori"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px"></a></div>                        | <div align="center"><a href="https://x.com/jaydrogers"><img src="https://serversideup.net/wp-content/uploads/2023/08/jay.jpg" title="Jay Rogers" width="150px"></a><br /><a href="https://x.com/jaydrogers"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/twitter.svg" title="Twitter" width="24px"></a><a href="https://github.com/jaydrogers"><img src="https://serversideup.net/wp-content/themes/serversideup/images/open-source/github.svg" title="GitHub" width="24px"></a></div>                                       |
 
 </div>
 
@@ -159,10 +159,10 @@ We're [Dan](https://twitter.com/danpastori) and [Jay](https://twitter.com/jaydro
 * **🤵‍♂️ [Get Professional Help](https://serversideup.net/professional-support)** - Get video + screen-sharing support from the core contributors.
 * **💻 [GitHub](https://github.com/serversideup)** - Check out our other open source projects.
 * **📫 [Newsletter](https://serversideup.net/subscribe)** - Skip the algorithms and get quality content right to your inbox.
-* **🐥 [Twitter](https://twitter.com/serversideup)** - You can also follow [Dan](https://twitter.com/danpastori) and [Jay](https://twitter.com/jaydrogers).
+* **🐥 [Twitter](https://x.com/serversideup)** - You can also follow [Dan](https://x.com/danpastori) and [Jay](https://x.com/jaydrogers).
 * **❤️ [Sponsor Us](https://github.com/sponsors/serversideup)** - Please consider sponsoring us so we can create more helpful resources.
 
-## Our products
+## Our Products
 If you appreciate this project, be sure to check out our other projects.
 
 ### 📚 Books
