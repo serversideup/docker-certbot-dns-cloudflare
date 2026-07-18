@@ -5,10 +5,10 @@ on:
     - cron: 30 15 * * 0-6
 jobs:
   deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Generate Sponsors 💖
         uses: JamesIves/github-sponsors-readme-action@v1
