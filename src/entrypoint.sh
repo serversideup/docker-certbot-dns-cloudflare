@@ -121,6 +121,11 @@ run_certbot() {
     else
         set -- "$@" --register-unsafely-without-email
     fi
+    
+    # Set deploy hook script if set
+    if [ -n "$CERTBOT_DEPLOY_HOOK" ]; then
+        set -- "$@" --deploy-hook "$CERTBOT_DEPLOY_HOOK"
+    fi
 
     # Run certbot command
     $certbot_cmd $debug_flag certonly \
