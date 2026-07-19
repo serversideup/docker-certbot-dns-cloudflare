@@ -144,12 +144,17 @@ run_certbot() {
 
 validate_environment_variables() {
     # Validate required environment variables
-    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS; do
+    for var in CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_PROPAGATION_SECONDS; do
         if [ -z "$(eval echo \$$var)" ]; then
             echo "Error: $var environment variable is not set"
             exit 1
         fi
     done
+
+    if [ -z "$CLOUDFLARE_API_TOKEN" ] && [ -z "$CLOUDFLARE_CREDENTIALS_FILE" ]; then
+        echo "Error: Either CLOUDFLARE_API_TOKEN or CLOUDFLARE_CREDENTIALS_FILE must be set"
+        exit 1
+    fi
 }
 
 ################################################################################
@@ -198,6 +203,10 @@ echo "-----------------------------------------------------------"
 if [ -f "$CLOUDFLARE_CREDENTIALS_FILE" ]; then
     echo "Using existing Cloudflare credentials file: $CLOUDFLARE_CREDENTIALS_FILE"
 else
+    if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+        echo "Error: CLOUDFLARE_API_TOKEN is not set and CLOUDFLARE_CREDENTIALS_FILE does not exist."
+        exit 1
+    fi
     echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > "$CLOUDFLARE_CREDENTIALS_FILE"
     chmod 600 "$CLOUDFLARE_CREDENTIALS_FILE"
     if ! is_default_privileges; then
