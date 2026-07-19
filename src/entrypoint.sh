@@ -203,6 +203,10 @@ echo "-----------------------------------------------------------"
 if [ -f "$CLOUDFLARE_CREDENTIALS_FILE" ]; then
     echo "Using existing Cloudflare credentials file: $CLOUDFLARE_CREDENTIALS_FILE"
 else
+    if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+        echo "Error: CLOUDFLARE_API_TOKEN is not set and CLOUDFLARE_CREDENTIALS_FILE does not exist."
+        exit 1
+    fi
     echo "dns_cloudflare_api_token = $CLOUDFLARE_API_TOKEN" > "$CLOUDFLARE_CREDENTIALS_FILE"
     chmod 600 "$CLOUDFLARE_CREDENTIALS_FILE"
     if ! is_default_privileges; then
