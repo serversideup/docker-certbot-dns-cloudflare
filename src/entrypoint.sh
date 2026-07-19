@@ -114,6 +114,10 @@ run_certbot() {
         set -- "$@" --expand
     fi
 
+    if [ -n "$CERTBOT_DEPLOY_HOOK" ]; then
+        set -- "$@" --deploy-hook "$CERTBOT_DEPLOY_HOOK"
+    fi
+
     # Run certbot command
     $certbot_cmd $debug_flag certonly \
         --dns-cloudflare \
