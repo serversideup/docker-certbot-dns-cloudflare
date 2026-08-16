@@ -109,6 +109,20 @@ run_certbot() {
     debug_flag=""
     [ "$DEBUG" = "true" ] && debug_flag="-v"
 
+     # Build additional certbot flags using positional parameters
+    set --  # Reset positional parameters
+    
+    if [ -n "$CERTBOT_CERT_NAME" ]; then
+        set -- "$@" --cert-name "$CERTBOT_CERT_NAME"
+    elif [ "$CERTBOT_EXPAND" = "true" ]; then
+        set -- "$@" --expand
+    fi
+
+    if [ -n "$CERTBOT_DEPLOY_HOOK" ]; then
+        set -- "$@" --deploy-hook "$CERTBOT_DEPLOY_HOOK"
+    fi
+
+    # Run certbot command
     $certbot_cmd $debug_flag certonly \
         --dns-cloudflare \
         --dns-cloudflare-credentials "$CLOUDFLARE_CREDENTIALS_FILE" \
@@ -119,7 +133,8 @@ run_certbot() {
         --server "$CERTBOT_SERVER" \
         --agree-tos \
         --non-interactive \
-        --strict-permissions
+        --strict-permissions \
+        "$@"
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo "Error: certbot command failed with exit code $exit_code"

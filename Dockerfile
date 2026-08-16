@@ -9,6 +9,8 @@ ARG CERTBOT_GID=9999
 
 ENV CERTBOT_DOMAINS="" \
     CERTBOT_EMAIL="" \
+    CERTBOT_EXPAND=false \
+    CERTBOT_CERT_NAME="" \
     CERTBOT_KEY_TYPE="ecdsa" \
     CERTBOT_SERVER="https://acme-v02.api.letsencrypt.org/directory" \
     CLOUDFLARE_API_TOKEN="" \
