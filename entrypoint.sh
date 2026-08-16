@@ -5,6 +5,10 @@ default_gid=0
 default_unprivileged_user=certbot
 default_unprivileged_group=certbot
 
+# Setting permissions
+chmod 755 /etc/letsencrypt
+chown $PUID:$PGID /etc/letsencrypt
+
 if [ "$DEBUG" = "true" ]; then
     set -x
 fi
@@ -142,6 +146,15 @@ run_certbot() {
     fi
 }
 
+update_unraid_bundle() {
+    cert_name="${CERTBOT_CERT_NAME:-${CERTBOT_DOMAINS%%,*}}"
+    echo "Updating unraid bundle..."
+    mkdir -p /etc/ssl
+    cat "/etc/letsencrypt/live/$cert_name/fullchain.pem" > /etc/ssl/unraid_bundle.pem
+    cat "/etc/letsencrypt/live/$cert_name/privkey.pem" >> /etc/ssl/unraid_bundle.pem
+    echo "Done. Unraid SSL bundle updated."
+}
+
 validate_environment_variables() {
     # Validate required environment variables
     for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS; do
@@ -186,6 +199,9 @@ EOF
 
 echo "🚀 Let's Get Encrypted! 🚀"
 echo "🌐 Domain(s): $CERTBOT_DOMAINS"
+if [ -n "$CERTBOT_CERT_NAME" ]; then
+    echo "📛 Certificate Name: $CERTBOT_CERT_NAME"
+fi
 echo "📧 Email: $CERTBOT_EMAIL"
 echo "🌐 Certbot Server: $CERTBOT_SERVER"
 echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
@@ -215,6 +231,7 @@ if [ $# -gt 0 ]; then
 else
     # Run certbot initially to get the certificates
     run_certbot
+    update_unraid_bundle
 
     # If RENEWAL_INTERVAL is set to 0, do not attempt to renew certificates and exit immediately
     if [ "$RENEWAL_INTERVAL" = "0" ]; then
@@ -246,5 +263,6 @@ else
             echo "Error: Certificate renewal failed. Exiting."
             exit 1
         fi
+        update_unraid_bundle
     done
 fi
