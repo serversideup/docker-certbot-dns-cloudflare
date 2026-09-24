@@ -26,6 +26,10 @@ COPY --chmod=700 entrypoint.sh /entrypoint.sh
 
 RUN apk update && \
     apk add --no-cache shadow su-exec && \
+    # Enable SOCKS proxy support via the standard HTTP_PROXY/HTTPS_PROXY environment
+    # variables (see "Using a proxy" in the README): pysocks for certbot/ACME (requests),
+    # socksio for the Cloudflare API client (httpx)
+    pip install --no-cache-dir pysocks socksio && \
     addgroup -g "${CERTBOT_GID}" "${CERTBOT_GROUP}" && \
     adduser -u "${CERTBOT_UID}" -G "${CERTBOT_GROUP}" -D -H "${CERTBOT_USER}" && \
     mkdir -p /var/log/letsencrypt && \

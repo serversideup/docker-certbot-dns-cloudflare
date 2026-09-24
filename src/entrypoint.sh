@@ -114,6 +114,15 @@ run_certbot() {
         set -- "$@" --expand
     fi
 
+    # Register with an email if provided, otherwise register without one
+    # (Let's Encrypt no longer sends expiration emails as of June 2025)
+    if [ -n "$CERTBOT_EMAIL" ]; then
+        set -- "$@" --email "$CERTBOT_EMAIL"
+    else
+        set -- "$@" --register-unsafely-without-email
+    fi
+    
+    # Set deploy hook script if set
     if [ -n "$CERTBOT_DEPLOY_HOOK" ]; then
         set -- "$@" --deploy-hook "$CERTBOT_DEPLOY_HOOK"
     fi
@@ -125,7 +134,6 @@ run_certbot() {
         --dns-cloudflare-propagation-seconds "$CLOUDFLARE_PROPAGATION_SECONDS" \
         -d "$CERTBOT_DOMAINS" \
         --key-type "$CERTBOT_KEY_TYPE" \
-        --email "$CERTBOT_EMAIL" \
         --server "$CERTBOT_SERVER" \
         --agree-tos \
         --non-interactive \
@@ -144,7 +152,7 @@ run_certbot() {
 
 validate_environment_variables() {
     # Validate required environment variables
-    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_EMAIL CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS; do
+    for var in CLOUDFLARE_API_TOKEN CERTBOT_DOMAINS CERTBOT_KEY_TYPE CERTBOT_SERVER CLOUDFLARE_CREDENTIALS_FILE CLOUDFLARE_PROPAGATION_SECONDS; do
         if [ -z "$(eval echo \$$var)" ]; then
             echo "Error: $var environment variable is not set"
             exit 1
@@ -186,7 +194,7 @@ EOF
 
 echo "🚀 Let's Get Encrypted! 🚀"
 echo "🌐 Domain(s): $CERTBOT_DOMAINS"
-echo "📧 Email: $CERTBOT_EMAIL"
+echo "📧 Email: ${CERTBOT_EMAIL:-(none — registering without an email address)}"
 echo "🌐 Certbot Server: $CERTBOT_SERVER"
 echo "🔑 Key Type: $CERTBOT_KEY_TYPE"
 echo "⏰ Renewal Interval: $RENEWAL_INTERVAL seconds"
